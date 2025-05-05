@@ -19,17 +19,20 @@ io.on('connection', (socket) => {
 
         const people = users.addPerson(socket.id, user.name, user.room)
 
-        socket.broadcast.to(user.room).emit('people-list', users.getPeopleForRoom( user.room ))
+        socket.broadcast.to(user.room).emit('people-list', users.getPeopleForRoom(user.room))
+        socket.broadcast.to(user.room).emit('create-message', createMessage('Admin', `${user.name} se unió`))
         
         return callback( people )
     })
 
-    socket.on('create-message', (data) => {
+    socket.on('create-message', (data, callback) => {
 
         const person = users.getPerson( socket.id )
 
         const message = createMessage(person.name, data.message)
         socket.broadcast.to(person.room).emit('create-message', message)
+
+        callback(message)
     })
 
     socket.on('disconnect', () => {

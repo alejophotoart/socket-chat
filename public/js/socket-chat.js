@@ -13,10 +13,11 @@ const user = {
 }
 
 socket.on('connect', function() {
-    console.log('Conectado al servidor');
+    // console.log('Conectado al servidor');
 
     socket.emit('enter-chat', user, ( resp ) => {
-        console.log('Usuarios conectados', resp);
+        // console.log('Usuarios conectados', resp);
+        renderUsers( resp )
     })
 });
 
@@ -29,22 +30,18 @@ socket.on('disconnect', function() {
 
 });
 
-// Enviar información
-// socket.emit('sendMessage', {
-//     message: 'Hola Mundo'
-// }, function(resp) {
-//     console.log('respuesta server: ', resp);
-// });
-
 // Escuchar información
-socket.on('create-message', function(message) {
-    console.log('Servidor:', message);
+socket.on('create-message', function (message) {
+    renderMessages(message, false)
+    scrollBottom()
 });
 
 // Escuchar cambios de usuarios
 // Cuando un usuario entra o sale del chat
 socket.on('people-list', function(people) {
-    console.log("people-list", people);
+    // console.log("people-list", people);
+    renderUsers( people )
+
 });
 
 // Mensajes privados
